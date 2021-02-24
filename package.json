@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "copy:html": "ncp ./src/index.html ./out/index.html",
-    "copy:js": "ncp ./src/main.js ./out/main.js",
+    "copy:html": "ncp ./index.html ./out/index.html",
     "copy": "mkdirp out && npm-run-all -p copy:*",
     "watch": "elm-live ./src/Main.elm --open --pushstate --dir=out -- --output=./out/elm.js --debug",
     "start": "npm-run-all -s copy watch"
