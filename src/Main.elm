@@ -1,10 +1,11 @@
 module Main exposing (main)
 
-import Browser
+import Browser exposing (Document)
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Page.Home as Home
 import Url
 
 
@@ -14,13 +15,13 @@ import Url
 -- ---------------------------
 
 
-type alias Model =
-    Int
+type Model
+    = Home Home.Model
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ _ _ =
-    ( 0
+    ( Home {}
     , Cmd.none
     )
 
@@ -34,11 +35,24 @@ init _ _ _ =
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
+    | GotHomeMsg Home.Msg
+
+
+updateWith : (subModel -> Model) -> (subMsg -> Msg) -> ( subModel, Cmd subMsg ) -> ( Model, Cmd Msg )
+updateWith toModel toMsg ( subModel, subCmd ) =
+    ( toModel subModel
+    , Cmd.map toMsg subCmd
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update _ model =
-    ( model, Cmd.none )
+update msg model =
+    case ( msg, model ) of
+        ( GotHomeMsg subMsg, Home subModel ) ->
+            Home.update subMsg subModel |> updateWith Home GotHomeMsg
+
+        _ ->
+            ( model, Cmd.none )
 
 
 
@@ -47,12 +61,21 @@ update _ model =
 -- ---------------------------
 
 
-view : Model -> Browser.Document Msg
-view _ =
-    { title = "トップページ"
-    , body =
-        [ text "Hello World!" ]
-    }
+view : Model -> Document Msg
+view model =
+    let
+        viewPage toMsg config =
+            let
+                { title, body } =
+                    config
+            in
+            { title = title
+            , body = Html.map toMsg body |> List.singleton
+            }
+    in
+    case model of
+        Home home ->
+            viewPage GotHomeMsg (Home.view home)
 
 
 
