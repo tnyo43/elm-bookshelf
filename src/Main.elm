@@ -6,6 +6,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Page.Home as Home
+import Page.NotFound as NotFound
+import Route exposing (Route)
 import Url
 
 
@@ -16,14 +18,14 @@ import Url
 
 
 type Model
-    = Home Home.Model
+    = Redirect
+    | Home Home.Model
+    | NotFound NotFound.Model
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init _ _ _ =
-    ( Home {}
-    , Cmd.none
-    )
+init _ url _ =
+    changeRouteTo (Route.urlToRoute url) Redirect
 
 
 
@@ -36,6 +38,7 @@ type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | GotHomeMsg Home.Msg
+    | GotNotFoundMsg ()
 
 
 updateWith : (subModel -> Model) -> (subMsg -> Msg) -> ( subModel, Cmd subMsg ) -> ( Model, Cmd Msg )
@@ -45,9 +48,22 @@ updateWith toModel toMsg ( subModel, subCmd ) =
     )
 
 
+changeRouteTo : Route -> Model -> ( Model, Cmd Msg )
+changeRouteTo route _ =
+    case route of
+        Route.NotFound ->
+            NotFound.init () |> updateWith NotFound GotNotFoundMsg
+
+        Route.Home ->
+            Home.init () |> updateWith Home GotHomeMsg
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
+        ( UrlChanged url, _ ) ->
+            changeRouteTo (Route.urlToRoute url) model
+
         ( GotHomeMsg subMsg, Home subModel ) ->
             Home.update subMsg subModel |> updateWith Home GotHomeMsg
 
@@ -74,6 +90,14 @@ view model =
             }
     in
     case model of
+        Redirect ->
+            { title = "blank"
+            , body = []
+            }
+
+        NotFound notFound ->
+            viewPage GotNotFoundMsg (NotFound.view notFound)
+
         Home home ->
             viewPage GotHomeMsg (Home.view home)
 

@@ -7,6 +7,11 @@ type alias Model =
     {}
 
 
+init : () -> ( Model, Cmd Msg )
+init _ =
+    ( {}, Cmd.none )
+
+
 type Msg
     = Nothing
 
