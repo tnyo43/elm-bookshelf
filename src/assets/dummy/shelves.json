@@ -1,0 +1,148 @@
+[
+  {
+    "id": "shelf-0000",
+    "name": "昔話",
+    "description": "私の好きな昔話の本",
+    "user": {
+      "id": "user-0000",
+      "name": "Alice"
+    },
+    "books": [
+      {
+        "id": "book-0000",
+        "title": "桃太郎",
+        "category": "昔話",
+        "author": "不明",
+        "user": "user-0000"
+      },
+      {
+        "id": "book-0001",
+        "title": "赤頭巾",
+        "category": "昔話",
+        "author": "グリム兄弟",
+        "user": "user-0000"
+      },
+      {
+        "id": "book-0002",
+        "title": "裸の王様",
+        "category": "昔話",
+        "author": "アンデルセン",
+        "user": "user-0000"
+      },
+      {
+        "id": "book-0003",
+        "title": "かぐや姫",
+        "category": "昔話",
+        "author": "不明",
+        "user": "user-0000"
+      }
+    ]
+  },
+  {
+    "id": "shelf-0001",
+    "name": "プログラミング言語の本",
+    "description": "プログラミング全部わかります",
+    "user": {
+      "id": "user-0000",
+      "name": "Alice"
+    },
+    "books": [
+      {
+        "id": "book-0004",
+        "title": "Elm基礎",
+        "category": "プログラミング",
+        "author": "elm太郎",
+        "user": "user-0000"
+      },
+      {
+        "id": "book-0005",
+        "title": "Haskellをすごいたのしく学ぼう！",
+        "category": "プログラミング",
+        "author": "Haskell花子",
+        "user": "user-0000"
+      },
+      {
+        "id": "book-0006",
+        "title": "プログラミング with OCaml",
+        "category": "プログラミング",
+        "author": "ocamlたかし",
+        "user": "user-0000"
+      },
+      {
+        "id": "book-0007",
+        "title": "TypeScript実践",
+        "category": "プログラミング",
+        "author": "javascrip子",
+        "user": "user-0000"
+      }
+    ]
+  },
+  {
+    "id": "shelf-0003",
+    "name": "図鑑",
+    "description": "生き物とか車の図鑑",
+    "user": {
+      "id": "user-0001",
+      "name": "Bob"
+    },
+    "books": [
+      {
+        "id": "book-0008",
+        "title": "海の生き物",
+        "category": "生物",
+        "author": "さかなさん",
+        "user": "user-0001"
+      }
+    ]
+  },
+  {
+    "id": "shelf-0004",
+    "name": "漫画",
+    "description": "大好きな漫画",
+    "user": {
+      "id": "user-0001",
+      "name": "Bob"
+    },
+    "books": [
+      {
+        "id": "book-0009",
+        "title": "ワンピース",
+        "category": "漫画",
+        "author": "おださん",
+        "user": "user-0001"
+      },
+      {
+        "id": "book-0010",
+        "title": "コナン",
+        "category": "漫画",
+        "author": "あおやまさん",
+        "user": "user-0001"
+      }
+    ]
+  },
+  {
+    "id": "shelf-0005",
+    "name": "お気に入りの本",
+    "description": "最近読んだ本",
+    "user": {
+      "id": "user-0002",
+      "name": "Charlie"
+    },
+    "books": [
+      {
+        "id": "book-0011",
+        "title": "三国志",
+        "category": "歴史",
+        "author": "さんごく太郎",
+        "user": "user-0002"
+      },
+      {
+        "id": "book-0012",
+        "title": "鬼滅の剣",
+        "category": "漫画",
+        "author": "れんごくさん",
+        "user": "user-0002"
+      }
+    ]
+  }
+]

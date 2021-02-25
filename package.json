@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build:sass": "node-sass --include-path scss ./src/style.scss ./out/style.css",
+    "build:sass": "node-sass --include-path scss ./src/assets/scss/style.scss ./out/style.css",
+    "copy:assets": "ncp ./src/assets ./out/assets",
     "copy:html": "ncp ./index.html ./out/index.html",
     "copy": "mkdirp out && npm-run-all -p copy:*",
     "watch:elm": "elm-live ./src/Main.elm --open --pushstate --dir=out -- --output=./out/elm.js --debug",
-    "watch:sass": "npm run build:sass && node-sass -w --include-path scss ./src/style.scss ./out/style.css",
+    "watch:sass": "npm run build:sass && node-sass -w --include-path scss ./src/assets/scss/style.scss ./out/style.css",
     "watch": "npm-run-all -p watch:*",
     "start": "npm-run-all -s copy watch"
   },
