@@ -5,6 +5,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Page
 import Page.Home as Home
 import Page.NotFound as NotFound
 import Route exposing (Route)
@@ -83,10 +84,10 @@ view model =
         viewPage toMsg config =
             let
                 { title, body } =
-                    config
+                    Page.view config
             in
             { title = title
-            , body = Html.map toMsg body |> List.singleton
+            , body = List.map (Html.map toMsg) body
             }
     in
     case model of

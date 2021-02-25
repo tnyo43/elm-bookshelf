@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "build:sass": "node-sass --include-path scss ./src/style.scss ./out/style.css",
     "copy:html": "ncp ./index.html ./out/index.html",
     "copy": "mkdirp out && npm-run-all -p copy:*",
-    "watch": "elm-live ./src/Main.elm --open --pushstate --dir=out -- --output=./out/elm.js --debug",
+    "watch:elm": "elm-live ./src/Main.elm --open --pushstate --dir=out -- --output=./out/elm.js --debug",
+    "watch:sass": "npm run build:sass && node-sass -w --include-path scss ./src/style.scss ./out/style.css",
+    "watch": "npm-run-all -p watch:*",
     "start": "npm-run-all -s copy watch"
   },
   "dependencies": {
@@ -13,6 +16,7 @@
     "elm-live": "^4.0.2",
     "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
+    "node-sass": "^5.0.0",
     "npm-run-all": "^4.1.5"
   }
 }

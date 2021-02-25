@@ -17,8 +17,8 @@ update _ model =
     ( model, Cmd.none )
 
 
-view : Model -> { title : String, body : Html msg }
+view : Model -> { title : String, body : List (Html msg) }
 view _ =
     { title = "404 | Not Found"
-    , body = text "Page Not Found"
+    , body = [ text "Page Not Found" ]
     }

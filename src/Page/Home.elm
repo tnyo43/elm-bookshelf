@@ -1,6 +1,13 @@
 module Page.Home exposing (..)
 
-import Html exposing (Html, text)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+
+
+
+-- ---------------------------
+-- MODEL
+-- ---------------------------
 
 
 type alias Model =
@@ -10,6 +17,12 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( {}, Cmd.none )
+
+
+
+-- ---------------------------
+-- UPDATE
+-- ---------------------------
 
 
 type Msg
@@ -23,8 +36,16 @@ update msg model =
             ( model, Cmd.none )
 
 
-view : Model -> { title : String, body : Html Msg }
+
+-- ---------------------------
+-- VIEW
+-- ---------------------------
+
+
+view : Model -> { title : String, body : List (Html Msg) }
 view _ =
     { title = "トップページ"
-    , body = text "Hello World!"
+    , body =
+        [ text "Hello World!"
+        ]
     }
