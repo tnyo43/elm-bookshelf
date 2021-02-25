@@ -1,0 +1,39 @@
+{
+  "id": "shelf-0000",
+  "name": "昔話",
+  "description": "私の好きな昔話の本",
+  "user": {
+    "id": "user-0000",
+    "name": "Alice"
+  },
+  "books": [
+    {
+      "id": "book-0000",
+      "title": "桃太郎",
+      "category": "昔話",
+      "author": "不明",
+      "user": "user-0000"
+    },
+    {
+      "id": "book-0001",
+      "title": "赤頭巾",
+      "category": "昔話",
+      "author": "グリム兄弟",
+      "user": "user-0000"
+    },
+    {
+      "id": "book-0002",
+      "title": "裸の王様",
+      "category": "昔話",
+      "author": "アンデルセン",
+      "user": "user-0000"
+    },
+    {
+      "id": "book-0003",
+      "title": "かぐや姫",
+      "category": "昔話",
+      "author": "不明",
+      "user": "user-0000"
+    }
+  ]
+}

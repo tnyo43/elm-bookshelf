@@ -8,7 +8,9 @@ import Html.Events exposing (..)
 import Page
 import Page.Home as Home
 import Page.NotFound as NotFound
+import Page.Shelf as Shelf
 import Route exposing (Route)
+import Session exposing (Session(..))
 import Url
 
 
@@ -19,14 +21,15 @@ import Url
 
 
 type Model
-    = Redirect
+    = Redirect Session
+    | NotFound Session
     | Home Home.Model
-    | NotFound NotFound.Model
+    | Shelf Shelf.Model
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init _ url _ =
-    changeRouteTo (Route.urlToRoute url) Redirect
+init _ url key =
+    changeRouteTo (Route.urlToRoute url) (Redirect (LoggedIn key { id = "user-0000", name = "Alice" }))
 
 
 
@@ -39,7 +42,24 @@ type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | GotHomeMsg Home.Msg
+    | GotShelfMsg Shelf.Msg
     | GotNotFoundMsg ()
+
+
+toSession : Model -> Session
+toSession model =
+    case model of
+        Redirect session ->
+            session
+
+        NotFound session ->
+            session
+
+        Home home ->
+            Home.toSession home
+
+        Shelf shelf ->
+            Shelf.toSession shelf
 
 
 updateWith : (subModel -> Model) -> (subMsg -> Msg) -> ( subModel, Cmd subMsg ) -> ( Model, Cmd Msg )
@@ -50,13 +70,20 @@ updateWith toModel toMsg ( subModel, subCmd ) =
 
 
 changeRouteTo : Route -> Model -> ( Model, Cmd Msg )
-changeRouteTo route _ =
+changeRouteTo route model =
+    let
+        session =
+            toSession model
+    in
     case route of
-        Route.NotFound ->
-            NotFound.init () |> updateWith NotFound GotNotFoundMsg
-
         Route.Home ->
-            Home.init () |> updateWith Home GotHomeMsg
+            Home.init session |> updateWith Home GotHomeMsg
+
+        Route.Shelf id ->
+            Shelf.init session id |> updateWith Shelf GotShelfMsg
+
+        _ ->
+            ( NotFound session, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -67,6 +94,24 @@ update msg model =
 
         ( GotHomeMsg subMsg, Home subModel ) ->
             Home.update subMsg subModel |> updateWith Home GotHomeMsg
+
+        ( GotShelfMsg subMsg, Shelf subModel ) ->
+            Shelf.update subMsg subModel |> updateWith Shelf GotShelfMsg
+
+        ( LinkClicked urlRequest, _ ) ->
+            case urlRequest of
+                Browser.Internal url ->
+                    case url.fragment of
+                        Nothing ->
+                            ( model, Nav.pushUrl (Session.navKey (toSession model)) (Url.toString url) )
+
+                        Just _ ->
+                            ( model, Nav.pushUrl (Session.navKey (toSession model)) (Url.toString url) )
+
+                Browser.External href ->
+                    ( model
+                    , Nav.load href
+                    )
 
         _ ->
             ( model, Cmd.none )
@@ -91,16 +136,19 @@ view model =
             }
     in
     case model of
-        Redirect ->
+        Redirect _ ->
             { title = "blank"
             , body = []
             }
 
-        NotFound notFound ->
-            viewPage GotNotFoundMsg (NotFound.view notFound)
+        NotFound _ ->
+            viewPage GotNotFoundMsg NotFound.view
 
         Home home ->
             viewPage GotHomeMsg (Home.view home)
+
+        Shelf shelf ->
+            viewPage GotShelfMsg (Shelf.view shelf)
 
 
 

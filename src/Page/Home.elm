@@ -7,6 +7,8 @@ import Html exposing (..)
 import Html.Attributes exposing (class)
 import Http
 import Json.Decode exposing (Decoder, field, list, map2, map5, string)
+import Route
+import Session exposing (Session)
 import Utils
 
 
@@ -14,14 +16,6 @@ import Utils
 -- ---------------------------
 -- HTTP
 -- ---------------------------
-
-
-getUser : Cmd Msg
-getUser =
-    Http.get
-        { url = "assets/dummy/user.json"
-        , expect = Http.expectJson GotUser userDecoder
-        }
 
 
 userDecoder : Decoder User
@@ -68,17 +62,17 @@ shelvesDecoder =
 
 
 type alias Model =
-    { user : User
+    { session : Session
     , shelves : List Shelf
     }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( { user = User "" ""
+init : Session -> ( Model, Cmd Msg )
+init session =
+    ( { session = session
       , shelves = []
       }
-    , Cmd.batch [ getUser, getShelves ]
+    , getShelves
     )
 
 
@@ -89,21 +83,17 @@ init _ =
 
 
 type Msg
-    = GotUser (Result Http.Error User)
-    | GotShelves (Result Http.Error (List Shelf))
+    = GotShelves (Result Http.Error (List Shelf))
+
+
+toSession : Model -> Session
+toSession =
+    .session
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GotUser result ->
-            case result of
-                Ok user ->
-                    ( { model | user = user }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
         GotShelves result ->
             case result of
                 Ok shelves ->
@@ -121,7 +111,7 @@ update msg model =
 
 shelfView : Shelf -> Html Msg
 shelfView shelf =
-    div [ class "shelf" ]
+    a [ Route.href (Route.Shelf shelf.id), class "shelf" ]
         [ div [ class "header" ]
             [ div [ class "title" ] [ text shelf.name ]
             , div [ class "discription" ] [ text shelf.description ]
@@ -154,11 +144,15 @@ userShelves name shelves =
 
 view : Model -> { title : String, body : List (Html Msg) }
 view model =
+    let
+        user =
+            Session.toUser model.session
+    in
     { title = "トップページ"
     , body =
         [ div [ class "shelves-contianer" ] <|
-            userShelves "あなた" (List.filter (\shelf -> shelf.user.id == model.user.id) model.shelves)
-                :: (List.filter (\shelf -> shelf.user.id == model.user.id |> not) model.shelves
+            userShelves "あなた" (List.filter (\shelf -> shelf.user.id == user.id) model.shelves)
+                :: (List.filter (\shelf -> shelf.user.id == user.id |> not) model.shelves
                         |> Utils.group (\s1 s2 -> s1.user.id == s2.user.id)
                         |> List.map
                             (\shelves ->
