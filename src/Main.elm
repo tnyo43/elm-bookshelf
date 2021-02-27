@@ -6,8 +6,10 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Page
+import Page.Book as Book
 import Page.Home as Home
 import Page.NotFound as NotFound
+import Page.Profile as Profile
 import Page.Shelf as Shelf
 import Route exposing (Route)
 import Session exposing (Session(..))
@@ -24,7 +26,9 @@ type Model
     = Redirect Session
     | NotFound Session
     | Home Home.Model
+    | Profile Profile.Model
     | Shelf Shelf.Model
+    | Book Book.Model
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -42,7 +46,9 @@ type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | GotHomeMsg Home.Msg
+    | GotProfileMsg Profile.Msg
     | GotShelfMsg Shelf.Msg
+    | GotBookMsg Book.Msg
     | GotNotFoundMsg ()
 
 
@@ -58,8 +64,14 @@ toSession model =
         Home home ->
             Home.toSession home
 
+        Profile profile ->
+            Profile.toSession profile
+
         Shelf shelf ->
             Shelf.toSession shelf
+
+        Book book ->
+            Book.toSession book
 
 
 updateWith : (subModel -> Model) -> (subMsg -> Msg) -> ( subModel, Cmd subMsg ) -> ( Model, Cmd Msg )
@@ -79,10 +91,16 @@ changeRouteTo route model =
         Route.Home ->
             Home.init session |> updateWith Home GotHomeMsg
 
+        Route.Profile id ->
+            Profile.init session id |> updateWith Profile GotProfileMsg
+
         Route.Shelf id ->
             Shelf.init session id |> updateWith Shelf GotShelfMsg
 
-        _ ->
+        Route.Book id ->
+            Book.init session id |> updateWith Book GotBookMsg
+
+        Route.NotFound ->
             ( NotFound session, Cmd.none )
 
 
@@ -147,8 +165,14 @@ view model =
         Home home ->
             viewPage GotHomeMsg (Home.view home)
 
+        Profile profile ->
+            viewPage GotProfileMsg (Profile.view profile)
+
         Shelf shelf ->
             viewPage GotShelfMsg (Shelf.view shelf)
+
+        Book book ->
+            viewPage GotBookMsg (Book.view book)
 
 
 

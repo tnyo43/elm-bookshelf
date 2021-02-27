@@ -1,5 +1,6 @@
 module Page.Home exposing (..)
 
+import Component.Shelf exposing (..)
 import Data.Book exposing (Book)
 import Data.Shelf exposing (Shelf)
 import Data.User exposing (User)
@@ -7,7 +8,6 @@ import Html exposing (..)
 import Html.Attributes exposing (class)
 import Http
 import Json.Decode exposing (Decoder, field, list, map2, map5, string)
-import Route
 import Session exposing (Session)
 import Utils
 
@@ -109,39 +109,6 @@ update msg model =
 -- ---------------------------
 
 
-shelfView : Shelf -> Html Msg
-shelfView shelf =
-    a [ Route.href (Route.Shelf shelf.id), class "shelf" ]
-        [ div [ class "header" ]
-            [ div [ class "title" ] [ text shelf.name ]
-            , div [ class "discription" ] [ text shelf.description ]
-            ]
-        , List.map
-            (\book ->
-                div [ class "book" ]
-                    [ div [] [ text book.title ]
-                    , div [] [ text book.author ]
-                    ]
-            )
-            shelf.books
-            |> div [ class "book-container" ]
-        ]
-
-
-userShelves : String -> List Shelf -> Html Msg
-userShelves name shelves =
-    div [ class "user-shelves" ]
-        [ text <| name ++ "の本棚"
-        , case shelves of
-            [] ->
-                div [] [ text "まだ本棚がありません。登録しましょう！" ]
-
-            _ ->
-                List.map shelfView shelves
-                    |> div [ class "shelves" ]
-        ]
-
-
 view : Model -> { title : String, body : List (Html Msg) }
 view model =
     let
@@ -151,19 +118,18 @@ view model =
     { title = "トップページ"
     , body =
         [ div [ class "shelves-contianer" ] <|
-            userShelves "あなた" (List.filter (\shelf -> shelf.user.id == user.id) model.shelves)
+            userShelves user (List.filter (\shelf -> shelf.user.id == user.id) model.shelves)
                 :: (List.filter (\shelf -> shelf.user.id == user.id |> not) model.shelves
                         |> Utils.group (\s1 s2 -> s1.user.id == s2.user.id)
                         |> List.map
                             (\shelves ->
                                 let
-                                    userName =
+                                    owner =
                                         List.head shelves
                                             |> Maybe.withDefault (Shelf "" "" "" (User "" "") [])
                                             |> .user
-                                            |> .name
                                 in
-                                userShelves userName shelves
+                                userShelves owner shelves
                             )
                    )
         ]

@@ -8,8 +8,9 @@ import Url.Parser as P exposing ((</>), (<?>), Parser, s, string)
 
 type Route
     = Home
-    | User String
+    | Profile String
     | Shelf String
+    | Book String
     | NotFound
 
 
@@ -22,7 +23,9 @@ routeParser : Parser (Route -> a) a
 routeParser =
     P.oneOf
         [ P.map Home P.top
+        , P.map Profile (s "profile" </> string)
         , P.map Shelf (s "shelf" </> string)
+        , P.map Book (s "book" </> string)
         ]
 
 
@@ -37,11 +40,14 @@ routeToPieces route =
         Home ->
             []
 
-        User id ->
-            [ "user", id ]
+        Profile id ->
+            [ "profile", id ]
 
         Shelf id ->
             [ "shelf", id ]
+
+        Book id ->
+            [ "book", id ]
 
         _ ->
             []

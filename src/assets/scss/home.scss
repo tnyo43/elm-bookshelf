@@ -39,8 +39,14 @@
     .book {
       height: 92px;
       width: 64px;
-      background-color: lightblue;
       padding: 16px;
+      background-color: lightblue;
+      color: #000;
+      text-decoration: none;
+    }
+
+    .book:hover {
+      border: 4px solid darkblue;
     }
 
     .book + .book {
