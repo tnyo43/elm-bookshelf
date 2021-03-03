@@ -1,0 +1,18 @@
+.book-title{
+  font-size: 70px;
+  text-align: center;
+}
+
+.book-body{
+  color : black;
+  justify-content: center;
+  display: flex;
+
+  img{
+    margin: 0;
+  } 
+
+  .book-info{
+    font-size: 24px;
+  }
+}

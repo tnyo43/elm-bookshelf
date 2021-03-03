@@ -2,7 +2,7 @@ module Page.Book exposing (..)
 
 import Data.Book exposing (Book)
 import Html exposing (..)
-import Html.Attributes exposing (src)
+import Html.Attributes exposing (class, src)
 import Session exposing (Session)
 
 
@@ -39,13 +39,12 @@ view : Model -> { title : String, body : List (Html Msg) }
 view model =
     { title = "本"
     , body =
-        [ div [] [ text model.book.title ]
-        , div []
+        [ div [ class "book-title" ] [ text model.book.title ]
+        , div [ class "book-body" ]
             [ img [ src "https://3.bp.blogspot.com/-ZaEM1sNjZ10/VtofN5FQWMI/AAAAAAAA4WI/W8nM9jXMwnA/s200/book_sasshi1_red.png" ] []
             , div []
-                [ div [] [ text model.book.category ]
-                , div [] [ text model.book.author ]
-                , div [] [ text model.book.user ]
+                [ div [] [ text "カテゴリー:", span [ class "book-info" ] [ text model.book.category ] ]
+                , div [] [ text "著者:", span [ class "book-info" ] [ text model.book.author ] ]
                 ]
             ]
         ]
